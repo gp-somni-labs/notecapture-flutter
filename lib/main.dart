@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 import 'providers/app_state_provider.dart';
 import 'providers/notes_provider.dart';
@@ -11,9 +10,6 @@ import 'utils/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize Hive for local storage
-  await Hive.initFlutter();
 
   // Set system UI style
   SystemChrome.setSystemUIOverlayStyle(

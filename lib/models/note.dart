@@ -1,52 +1,18 @@
-import 'package:hive/hive.dart';
-
-part 'note.g.dart';
-
-@HiveType(typeId: 0)
 class Note {
-  @HiveField(0)
   final String id;
-
-  @HiveField(1)
   final String content;
-
-  @HiveField(2)
   final String? summary;
-
-  @HiveField(3)
   final String source;
-
-  @HiveField(4)
   final String? sourceId;
-
-  @HiveField(5)
   final String category;
-
-  @HiveField(6)
   final List<String> topics;
-
-  @HiveField(7)
   final List<String> keyPoints;
-
-  @HiveField(8)
   final List<ActionItem> actionItems;
-
-  @HiveField(9)
   final List<Entity> entities;
-
-  @HiveField(10)
   final String? obsidianPath;
-
-  @HiveField(11)
   final NoteStatus status;
-
-  @HiveField(12)
   final DateTime createdAt;
-
-  @HiveField(13)
   final DateTime? processedAt;
-
-  @HiveField(14)
   final Map<String, dynamic>? metadata;
 
   Note({
@@ -155,36 +121,19 @@ class Note {
   }
 }
 
-@HiveType(typeId: 1)
 enum NoteStatus {
-  @HiveField(0)
   pending,
-  @HiveField(1)
   processing,
-  @HiveField(2)
   completed,
-  @HiveField(3)
   failed,
 }
 
-@HiveType(typeId: 2)
 class ActionItem {
-  @HiveField(0)
   final String task;
-
-  @HiveField(1)
   final String? assignee;
-
-  @HiveField(2)
   final String priority;
-
-  @HiveField(3)
   final String? dueDate;
-
-  @HiveField(4)
   final String? context;
-
-  @HiveField(5)
   final bool completed;
 
   ActionItem({
@@ -219,18 +168,10 @@ class ActionItem {
   }
 }
 
-@HiveType(typeId: 3)
 class Entity {
-  @HiveField(0)
   final String name;
-
-  @HiveField(1)
   final String type;
-
-  @HiveField(2)
   final String? context;
-
-  @HiveField(3)
   final Map<String, dynamic>? attributes;
 
   Entity({
