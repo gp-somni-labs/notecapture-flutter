@@ -77,13 +77,13 @@ class AppTheme {
       ),
 
       // Card Theme
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: bgCard,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
           side: BorderSide(
-            color: primaryCyan.withOpacity(0.1),
+            color: primaryCyan.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -185,7 +185,7 @@ class AppTheme {
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: primaryCyan,
-          side: BorderSide(color: primaryCyan.withOpacity(0.3)),
+          side: BorderSide(color: primaryCyan.withValues(alpha: 0.3)),
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -199,11 +199,11 @@ class AppTheme {
         fillColor: bgGlass,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: primaryCyan.withOpacity(0.2)),
+          borderSide: BorderSide(color: primaryCyan.withValues(alpha: 0.2)),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: primaryCyan.withOpacity(0.2)),
+          borderSide: BorderSide(color: primaryCyan.withValues(alpha: 0.2)),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -229,7 +229,7 @@ class AppTheme {
 
       // Divider
       dividerTheme: DividerThemeData(
-        color: primaryCyan.withOpacity(0.1),
+        color: primaryCyan.withValues(alpha: 0.1),
         thickness: 1,
       ),
 
@@ -255,7 +255,7 @@ class AppTheme {
       ),
 
       // Dialog
-      dialogTheme: DialogTheme(
+      dialogTheme: DialogThemeData(
         backgroundColor: bgCard,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -284,10 +284,10 @@ extension GlassEffect on Widget {
       borderRadius: borderRadius ?? BorderRadius.circular(16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(opacity),
+          color: Colors.white.withValues(alpha: opacity),
           borderRadius: borderRadius ?? BorderRadius.circular(16),
           border: Border.all(
-            color: AppTheme.primaryCyan.withOpacity(0.1),
+            color: AppTheme.primaryCyan.withValues(alpha: 0.1),
           ),
         ),
         child: this,
