@@ -12,8 +12,8 @@ RUN flutter pub get
 # Copy the rest of the app
 COPY . .
 
-# Create web platform support and build
-RUN flutter create --platforms web . && flutter build web --release
+# Create web platform support and build (disable icon tree-shaking due to iconsax font issues)
+RUN flutter create --platforms web . && flutter build web --release --no-tree-shake-icons
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
