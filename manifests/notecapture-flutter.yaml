@@ -1,0 +1,173 @@
+# NoteCapture Flutter Web App - Kubernetes Deployment
+# This deploys the Flutter web frontend for NoteCapture MCP
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: notecapture
+  labels:
+    name: notecapture
+    app.kubernetes.io/name: notecapture
+    app.kubernetes.io/component: frontend
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notecapture-flutter-config
+  namespace: notecapture
+data:
+  # Backend API URL - points to NoteCapture backend service
+  API_URL: "https://notecapture-api.home.lan"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notecapture-flutter
+  namespace: notecapture
+  labels:
+    app: notecapture-flutter
+    component: frontend
+    app.kubernetes.io/name: notecapture
+    app.kubernetes.io/component: frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: notecapture-flutter
+  template:
+    metadata:
+      labels:
+        app: notecapture-flutter
+        component: frontend
+    spec:
+      containers:
+        - name: flutter-web
+          image: ghcr.io/gp-somni-labs/notecapture-flutter:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+              name: http
+          envFrom:
+            - configMapRef:
+                name: notecapture-flutter-config
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          securityContext:
+            runAsNonRoot: false
+            allowPrivilegeEscalation: false
+      imagePullSecrets:
+        - name: ghcr-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: notecapture-flutter
+  namespace: notecapture
+  labels:
+    app: notecapture-flutter
+spec:
+  type: ClusterIP
+  selector:
+    app: notecapture-flutter
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: notecapture-flutter-ingress
+  namespace: notecapture
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-production
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - notecapture.home.lan
+      secretName: notecapture-flutter-tls
+  rules:
+    - host: notecapture.home.lan
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: notecapture-flutter
+                port:
+                  number: 80
+
+---
+# Network Policy - Allow ingress from Traefik only
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: notecapture-flutter-netpol
+  namespace: notecapture
+spec:
+  podSelector:
+    matchLabels:
+      app: notecapture-flutter
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: kube-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: traefik
+      ports:
+        - protocol: TCP
+          port: 80
+  egress:
+    - {}  # Allow all egress for API calls
+
+---
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: notecapture-flutter-hpa
+  namespace: notecapture
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: notecapture-flutter
+  minReplicas: 1
+  maxReplicas: 4
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70

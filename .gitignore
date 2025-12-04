@@ -1,0 +1,66 @@
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.lock
+!pubspec.lock
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.mocks.dart
+lib/generated_plugin_registrant.dart
+
+# Android
+android/.gradle/
+android/captures/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+android/**/GeneratedPluginRegistrant.java
+
+# iOS
+ios/Flutter/
+ios/.symlinks/
+ios/Pods/
+ios/Runner.xcworkspace/xcshareddata/
+ios/Runner.xcodeproj/project.xcworkspace/xcshareddata/
+
+# Web
+web/.last_build_id
+
+# macOS
+macos/Flutter/
+macos/.symlinks/
+macos/Pods/
+
+# Windows
+windows/flutter/
+
+# Linux
+linux/flutter/
+
+# Testing
+coverage/
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Secrets - never commit
+.env
+.env.*
+secrets/
+*.pem
+*.key
