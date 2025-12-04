@@ -136,6 +136,34 @@ class AppStateProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  // ============================================================================
+  // API KEYS
+  // ============================================================================
+
+  Future<String?> getApiKey(String key) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('api_key_$key');
+  }
+
+  Future<void> setApiKey(String key, String value) async {
+    final prefs = await SharedPreferences.getInstance();
+    if (value.isEmpty) {
+      await prefs.remove('api_key_$key');
+    } else {
+      await prefs.setString('api_key_$key', value);
+    }
+    notifyListeners();
+  }
+
+  Future<Map<String, String?>> getAllApiKeys(List<String> keys) async {
+    final prefs = await SharedPreferences.getInstance();
+    final result = <String, String?>{};
+    for (final key in keys) {
+      result[key] = prefs.getString('api_key_$key');
+    }
+    return result;
+  }
+
   @override
   void dispose() {
     _uptimeTimer?.cancel();
