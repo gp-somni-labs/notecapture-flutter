@@ -12,8 +12,8 @@ RUN flutter pub get
 # Copy the rest of the app
 COPY . .
 
-# Build for web with release mode
-RUN flutter build web --release --web-renderer html
+# Build for web with release mode (CanvasKit renderer is now default)
+RUN flutter config --enable-web && flutter build web --release
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
